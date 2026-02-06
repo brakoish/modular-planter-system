@@ -103,12 +103,12 @@ planter_module();
     
     output_file = output_dir / f"planter-{preset_name}.scad"
     output_file.write_text(scad_content)
-    print(f"✓ Generated: {output_file}")
+    print(f"Generated: {output_file}")
     return output_file
 
 def export_stl(scad_file, output_dir):
     """Export SCAD to STL using OpenSCAD"""
-    stl_file = output_dir / scad_file.stem + ".stl"
+    stl_file = output_dir / (scad_file.stem + ".stl")
     
     try:
         subprocess.run([
@@ -116,19 +116,19 @@ def export_stl(scad_file, output_dir):
             "-o", str(stl_file),
             str(scad_file)
         ], check=True)
-        print(f"✓ Exported: {stl_file}")
+        print(f"Exported: {stl_file}")
         return True
     except subprocess.CalledProcessError:
-        print(f"✗ Failed to export: {scad_file.name}")
+        print(f"Failed to export: {scad_file.name}")
         return False
     except FileNotFoundError:
-        print("⚠ OpenSCAD not found. Install from openscad.org")
+        print("WARNING: OpenSCAD not found. Install from openscad.org")
         print(f"  You can manually open: {scad_file}")
         return False
 
 def main():
     """Main entry point"""
-    print("🌱 Modular Planter System - Customizer")
+    print("Modular Planter System - Customizer")
     print("=" * 40)
     
     # Create output directory
@@ -137,13 +137,13 @@ def main():
     
     # Generate all presets
     for preset_name, params in PRESETS.items():
-        print(f"\n📐 Generating: {preset_name.title()} ({params['desc']})")
+        print(f"\nGenerating: {preset_name.title()} ({params['desc']})")
         scad_file = generate_openscad(preset_name, params, output_dir)
         
         # Try to export to STL if OpenSCAD is installed
         export_stl(scad_file, output_dir)
     
-    print(f"\n✅ Done! Files saved to: {output_dir.absolute()}")
+    print(f"\nDone! Files saved to: {output_dir.absolute()}")
     print("\nTo export STL files:")
     print("1. Install OpenSCAD from https://openscad.org")
     print("2. Run: python customizer.py")
